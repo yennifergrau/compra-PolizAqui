@@ -1,0 +1,84 @@
+<ion-content>
+<div class="body">
+  <div class="container">
+    <img src="../../../../assets/images/logo_polizaqui.jpeg" alt="PolizaAqui Logo">
+
+    <h1>Registrar pago</h1>
+    <h2 class="subtitle">Resumen del pedido</h2>
+    <div class="summary">
+        <p>Plan seleccionado: <span>{{informacionProducto || planApagar}}</span></p>
+        <p>Total a pagar: <span>{{  precioApagar  }} BS</span></p>
+    </div>
+
+    <div class="payment-method">
+        <h2 class="subtitle">Seleccione el método de pago:</h2>
+        <div class="form-group">
+            <select id="payment-type" (change)="togglePaymentFields($event)">
+              <option value="" disabled selected>Seleccione método</option>
+                <option value="telefono">Pago móvil</option>
+                <option value="cuenta">Cuenta bancaria</option>
+            </select>
+        </div>
+        <form [formGroup]="formSyPago" (ngSubmit)="submit()">
+        <div class="form-group">
+            <select id="bank-select" formControlName="bank_code"
+            [ngClass]="{'error': formSyPago.get('bank_code')?.invalid && formSyPago.get('bank_code')?.touched}">
+            >
+              <option value="" disabled selected>Seleccione banco</option>
+              @for(item of opcionBancos; track $index){
+                <option [value]="item.Code">{{item.Name}}</option>
+              }              
+            </select>
+            
+        </div>
+        <div class="form-group">
+          </div>
+            <div class="row">
+                <select id="id-type" formControlName="typeCedula"
+                [ngClass]="{'error': formSyPago.get('typeCedula')?.invalid && formSyPago.get('typeCedula')?.touched}">
+                >
+                  <option value="" disabled selected>-</option>
+                    <option value="V">V</option>
+                    <option value="E">E</option>
+                    <option value="G">G</option>
+                    <option value="J">J</option>
+                </select>
+                <input type="text" id="id-number" inputmode="numeric" formControlName="numberCedula" placeholder="Número de Cédula"
+                [ngClass]="{'error': formSyPago.get('numberCedula')?.invalid && formSyPago.get('numberCedula')?.touched}"
+                />
+            </div>
+
+            <label *ngIf="this.formSyPago.get('numeroCuentaT')?.invalid && (this.formSyPago.get('numeroCuentaT')?.dirty || this.formSyPago.get('numeroCuentaT')?.touched)" class="error-label">
+              Formato inválido
+            </label>
+
+        <div class="form-group" *ngIf="metodoPago === 'telefono'">
+          <label for="phone-number">Número de teléfono</label>
+          <input type="text" id="phone-number"  inputmode="numeric" maxlength="11" minlength="11" formControlName="numeroCuentaT" placeholder="Número de teléfono" 
+          [ngClass]="{'error': formSyPago.get('numeroCuentaT')?.invalid && formSyPago.get('numeroCuentaT')?.touched}"
+          />
+        </div>
+
+
+        <div class="form-group" *ngIf="metodoPago === 'cuenta'">
+          <label for="cuenta">Número de cuenta</label>
+          <input type="text" id="cuenta" inputmode="numeric" formControlName="numeroCuentaT" minlength="20" maxlength="20" placeholder="Número de cuenta"
+          [ngClass]="{'error': formSyPago.get('numeroCuentaT')?.invalid && formSyPago.get('numeroCuentaT')?.touched}"
+          >
+        </div>
+              
+    <div class="spinner">
+      @if(showLoading){
+        <app-spinner />
+      }
+    </div>
+    <button class="button" type="submit" id="open-modal">Realizar pago</button> 
+  </form>
+</div>
+</div>
+<footer>
+  <p>&copy; 2024 PolizAqui. Todos los derechos reservados. <a href="term-policy-dev">Términos y Condiciones</a></p>
+</footer>
+</div>
+</ion-content>
+<app-otp [isVisible]="isModalVisible" [paymentData]="paymentData" (closeModal)="closeModal()"></app-otp>

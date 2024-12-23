@@ -1,0 +1,7 @@
+{
+  "name": "PolizAqui",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "angular"
+}
